@@ -4,4 +4,6 @@ Telegram-бот-визитка парикмахерской: мастера, у�
 
 Стек: TypeScript, Node.js, [grammY](https://grammy.dev). Языки: русский и английский.
 
-Документация: [docs/](docs/).
+Документация:
+- [Сценарии и критерии приёмки](docs/SCENARIOS.md)
+- [Архитектура](docs/ARCHITECTURE.md)
