@@ -66,13 +66,14 @@ telegram-barber-bot/
 │   │   └── fallback/          # непонятный ввод и устаревшие кнопки
 │   └── middleware/
 │       ├── error-handler.ts   # bot.catch: классификация и логирование ошибок
+│       ├── private-only.ts    # пропускает только личные чаты
 │       └── logger.ts          # лог входящих апдейтов (без персональных данных)
 ├── data/
-│   ├── business.json          # название, адрес, карта, вход, часовой пояс, общий контакт
+│   ├── business.json          # название, адрес, карта, вход, общий контакт салона
 │   ├── masters.json
 │   ├── services.json
 │   ├── gallery.json
-│   └── schedule.json
+│   └── schedule.json          # часы работы, особые дни, часовой пояс салона
 ├── locales/
 │   ├── ru.ftl
 │   └── en.ftl
@@ -87,7 +88,8 @@ telegram-barber-bot/
 ├── docs/
 ├── .env.example
 ├── Dockerfile
-└── package.json
+├── package.json
+└── package-lock.json          # коммитится всегда: CI и Docker ставят зависимости через npm ci
 ```
 
 Каждый модуль в `features/` устроен одинаково:
@@ -118,11 +120,13 @@ features/services/
 Порядок middleware в `bot.ts`:
 
 1. `logger`
-2. `session` (хранилище языка)
-3. `i18n`
-4. модули `features/*` (start, menu, services, masters, gallery, schedule, location, booking, language, help)
-5. `fallback` (последним: ловит всё, что не обработали выше)
-6. `bot.catch(errorHandler)`
+2. `privateOnly`: апдейты не из личного чата (группы, каналы) дальше не проходят, даже `/start`
+3. `session` (хранилище языка)
+4. `i18n`
+5. модули `features/*` (start, menu, services, masters, gallery, schedule, location, booking, language, help)
+6. `fallback` (последним: ловит всё, что не обработали выше)
+
+Обработчик ошибок не входит в цепочку middleware: он регистрируется отдельно через `bot.catch(errorHandler)`.
 
 ## 5. Модель данных
 
@@ -134,33 +138,39 @@ type LocalizedText = Record<Locale, string>;   // { ru: '...', en: '...' }
 
 type ServiceGroupId = 'men' | 'women' | 'kids' | 'coloring';
 
+// Все id (мастеров, услуг, фото): ^[a-z0-9-]{1,20}$. Ограничение длины держит callback_data в 64 байтах.
+type Id = string;
+
+interface Contacts {              // схема требует хотя бы один канал
+  whatsapp?: string;              // номер в формате E.164 без '+': '79990000001'
+  phone?: string;                 // '+7 999 000-00-01'
+  telegram?: string;              // username без '@'
+  instagram?: string;             // username
+}
+
 interface Master {
-  id: string;                     // 'alexey', используется в callback_data
+  id: Id;                         // 'alexey', используется в callback_data
   name: LocalizedText;
   photo: string;                  // путь в assets/masters/
   specialization: LocalizedText;  // текст для карточки
-  groups: ServiceGroupId[];       // для сценария «мастер по задаче»
-  contacts: {
-    whatsapp?: string;            // номер в формате E.164 без '+': '79990000001'
-    phone?: string;               // '+7 999 000-00-01'
-    telegram?: string;            // username без '@'
-    instagram?: string;           // username
-  };
+  contacts: Contacts;
   contactHours: LocalizedText;    // 'Пн–Пт 10:00–19:00'
 }
+// Группы мастера не хранятся отдельно, а вычисляются из Service.masterIds.
+// Так фильтр «мастер по задаче» не может разойтись с прайсом.
 
 type Price =
   | { kind: 'fixed'; amount: number }      // 1500
   | { kind: 'from'; amount: number };      // от 4500, стоимость по сложности
 
 interface Service {
-  id: string;                     // 'men-haircut'
+  id: Id;                         // 'men-haircut'
   group: ServiceGroupId;
   title: LocalizedText;
   price: Price;
   durationMin: { min: number; max?: number };  // 45 или 120–240
   note?: LocalizedText;           // 'итог зависит от длины и сложности'
-  masterIds: string[];            // кто выполняет услугу
+  masterIds: Id[];                // кто выполняет услугу, минимум один
 }
 
 interface ServiceGroup {
@@ -173,11 +183,11 @@ interface ServiceGroup {
 interface GalleryCategory { id: ServiceGroupId; title: LocalizedText; order: number }
 
 interface GalleryItem {
-  id: string;
+  id: Id;
   category: ServiceGroupId;
   file: string;                   // путь в assets/gallery/
   caption: LocalizedText;
-  masterId?: string;              // «работа Ольги» и кнопка записи к ней
+  masterId?: Id;                  // «работа Ольги» и кнопка записи к ней
 }
 
 type Weekday = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun';
@@ -197,10 +207,11 @@ interface Schedule {
 interface Business {
   name: LocalizedText;
   address: LocalizedText;
-  mapLinks: { yandex?: string; google?: string };
+  mapLinks: { yandex?: string; google?: string };   // схема требует хотя бы одну ссылку
+  geo?: { lat: number; lon: number };               // нужно, если включим sendVenue
   entranceHint: LocalizedText;
-  entrancePhoto?: string;
-  contacts: Master['contacts'];   // общий номер салона для варианта «Любой мастер»
+  entrancePhoto: string;          // путь в assets/location/, обязателен по карте экранов
+  contacts: Contacts;             // общий контакт салона для варианта «Любой мастер»
   currency: 'RUB';
 }
 ```
@@ -214,7 +225,7 @@ interface Business {
   ],
   "services": [
     {
-      "id": "coloring",
+      "id": "coloring-full",
       "group": "coloring",
       "title": { "ru": "Окрашивание", "en": "Coloring" },
       "price": { "kind": "from", "amount": 4500 },
@@ -228,15 +239,17 @@ interface Business {
 
 **Проверки при старте (`data/loader.ts`):**
 - каждый файл соответствует схеме;
-- `id` уникальны внутри файла;
+- `id` уникальны внутри своей коллекции (группы отдельно, услуги отдельно), id соответствуют `^[a-z0-9-]{1,20}$`;
 - `masterIds`, `masterId`, `group`, `category` ссылаются на существующие записи;
-- файлы фото из `photo`, `file`, `entrancePhoto` существуют;
+- у каждого мастера и у салона есть хотя бы один канал связи, у салона хотя бы одна ссылка на карту;
+- каждый мастер выполняет хотя бы одну услугу;
+- файлы фото из `photo`, `file`, `entrancePhoto` существуют, это JPEG или PNG не больше 5 МБ (лимит Telegram для фото 10 МБ, сумма сторон до 10 000 px);
 - у каждой `LocalizedText` заполнены оба языка;
 - критерии приёмки: ровно 4 мастера, 4 группы, не меньше 8 фото в 3+ категориях (проверяется тестом, а не при старте, чтобы бот можно было запустить и с неполной галереей).
 
 Если проверка не прошла, бот не запускается и пишет в лог, какой файл и какое поле неверны.
 
-**Фото.** Файлы лежат в `assets/`. При первой отправке Telegram возвращает `file_id`, бот кэширует его в памяти (`Map<путь, file_id>`) и дальше шлёт фото по `file_id`, без повторной загрузки. Кэш не сохраняется на диск: после перезапуска первая отправка снова загрузит файл, это дёшево.
+**Фото.** Файлы лежат в `assets/`. Перед коммитом их ужимают до ~1280 px по длинной стороне (скрипт `npm run optimize-assets` на `sharp`), поэтому лимиты Telegram не достигаются. При первой отправке Telegram возвращает `file_id`, бот кэширует его в памяти (`Map<путь, file_id>`) и дальше шлёт фото по `file_id`, без повторной загрузки. Кэш не сохраняется на диск: после перезапуска первая отправка снова загрузит файл, это дёшево.
 
 ## 6. Мультиязычность (i18n)
 
@@ -287,7 +300,7 @@ schedule-closed-now = 🔴 Сейчас закрыто, откроемся { $ne
 |------|-------|----------|
 | текст | текст | `editMessageText` |
 | фото | фото | `editMessageMedia` (смена фото и подписи) |
-| текст ↔ фото | | удалить старое сообщение и отправить новое |
+| текст ↔ фото | | отправить новое сообщение, и только после успешной отправки удалить старое |
 | команда `/start`, `/menu` | любое | отправить новое сообщение |
 
 Ошибку Telegram `message is not modified` (повторное нажатие той же кнопки) рендер молча игнорирует.
@@ -314,12 +327,14 @@ Telegram ограничивает `callback_data` 64 байтами, поэто�
 | График | `sch` |
 | Адрес | `loc` |
 | Запись, выбор мастера | `b` |
+| Запись из экрана услуги | `b:s:coloring-full` (выбор мастера среди тех, кто делает услугу) |
 | Запись к мастеру | `b:m:olga` (или `b:m:any`) |
+| Запись к мастеру на услугу | `b:m:olga:coloring-full` |
 | Если не отвечает | `b:nr:olga` |
 | Выбор языка | `l:ru`, `l:en` |
 | Пустая кнопка (счётчик «3/8») | `noop` |
 
-`ui/callback.ts` содержит типизированные функции `encode(route)` и `decode(data)`. Модули не собирают строки вручную, поэтому опечатка в маршруте ловится компилятором. Тест проверяет, что самый длинный маршрут укладывается в 64 байта.
+`ui/callback.ts` содержит типизированные функции `encode(route)` и `decode(data)`. Модули не собирают строки вручную, поэтому опечатка в маршруте ловится компилятором. Выбранная услуга едет в самом callback, а не в сессии, поэтому кнопки работают и после перезапуска бота. Самый длинный маршрут `b:m:<id>:<id>` при id до 20 символов занимает 46 байт; тест проверяет лимит 64 байта на реальных данных.
 
 Регистрация в модуле выглядит так (иллюстрация, не финальный код):
 
@@ -336,9 +351,9 @@ composer.callbackQuery(/^s:g:(\w+)$/, async (ctx) => { ... });
 - **WhatsApp:** URL-кнопка `https://wa.me/<номер>?text=<готовый текст>`.
 - **Telegram:** URL-кнопка `https://t.me/<username>`. Подставит ли Telegram готовый текст, зависит от клиента, поэтому текст сообщения также показывается в экране записи, чтобы его можно было скопировать.
 - **Звонок:** Telegram не поддерживает ссылки `tel:` в inline-кнопках. Кнопка «Позвонить» присылает карточку контакта (`sendContact`): в ней есть кнопка звонка. Номер также виден текстом в карточке мастера, Telegram делает его кликабельным.
-- **Карта:** URL-кнопки на Яндекс и Google Карты, плюс `sendVenue` с координатами, чтобы карта открылась прямо в Telegram (по желанию, см. вопросы).
+- **Карта:** URL-кнопки на Яндекс и Google Карты, плюс `sendVenue` с координатами из `business.geo`, чтобы карта открылась прямо в Telegram (по желанию, см. вопросы).
 
-Готовый текст сообщения собирается в `domain/contacts.ts` из шаблона в `.ftl`, например: «Здравствуйте! Хочу записаться к Ольге на окрашивание».
+Готовый текст сообщения собирается в `domain/contacts.ts` из шаблона в `.ftl`, например: «Здравствуйте! Хочу записаться к Ольге на окрашивание». Если услуга не выбрана, используется общий шаблон без неё.
 
 ### Сценарий «нет ответа»
 
@@ -367,7 +382,7 @@ composer.callbackQuery(/^s:g:(\w+)$/, async (ctx) => { ... });
 - Текст, стикер, фото, голосовое, документ: короткая подсказка «Я понимаю только кнопки меню» и кнопка «Главное меню».
 - Чтобы не спамить, подсказка отправляется не чаще раза в 30 секунд для одного пользователя, остальные сообщения игнорируются. **[решение]**
 - Устаревшая кнопка (callback, который не узнал ни один модуль, или ссылка на удалённого мастера): `answerCallbackQuery` с текстом «Кнопка устарела» и показ главного меню.
-- Бот работает только в личных чатах. В группах и каналах апдейты игнорируются.
+- Бот работает только в личных чатах: middleware `privateOnly` отсекает группы и каналы до всех модулей.
 
 ## 9. Тесты
 
@@ -401,12 +416,13 @@ SESSION_DIR=./sessions
 
 | Команда | Что делает |
 |---------|------------|
-| `npm run dev` | `tsx watch src/index.ts`, перезапуск при изменениях. |
+| `npm run dev` | `tsx watch --env-file=.env src/index.ts`, перезапуск при изменениях. |
 | `npm run build` | `tsc` в `dist/`. |
-| `npm start` | `node dist/index.js`. |
+| `npm start` | `node --env-file-if-exists=.env dist/index.js`. В Docker и на хостинге переменные задаются окружением, файл `.env` не нужен. |
 | `npm test` | `vitest run`. |
 | `npm run lint`, `npm run typecheck` | Проверки для CI. |
-| `npm run validate-data` | Проверить `data/*.json` без запуска бота. Удобно после правки прайса. |
+| `npm run validate-data` | Проверить `data/*.json` и фото без запуска бота. Удобно после правки прайса. |
+| `npm run optimize-assets` | Ужать фото в `assets/` перед коммитом. |
 
 ### Режим получения апдейтов
 Long polling. **[решение]** Не нужен домен и HTTPS, работает на любом сервере и локально. Webhook имеет смысл, если позже понадобится serverless-хостинг, тогда добавится второй файл входа `src/webhook.ts`, логика бота не меняется.
@@ -416,6 +432,7 @@ Long polling. **[решение]** Не нужен домен и HTTPS, рабо
 - Папка `sessions/` монтируется как volume, чтобы язык пользователей не терялся при обновлении.
 - Хостинг: любой VPS с Docker, либо Fly.io или Railway. Выбор не влияет на код.
 - Graceful shutdown: по `SIGTERM`/`SIGINT` вызывается `bot.stop()`, чтобы не терять апдейты при перезапуске.
+- Ровно один экземпляр бота. Telegram отдаёт long polling только одному получателю, второй получит ошибку 409. Поэтому деплой идёт по схеме «остановить старый, запустить новый» (`docker compose up -d` с одним сервисом, на Fly.io стратегия `immediate` и один инстанс). Простой при обновлении несколько секунд, апдейты за это время Telegram хранит и отдаст после старта.
 - Обновить прайс или график: правка JSON → коммит → пересборка образа. Горячая перезагрузка данных без рестарта не нужна для этой версии.
 
 ## 11. Задел под онлайн-запись
@@ -425,9 +442,12 @@ Long polling. **[решение]** Не нужен домен и HTTPS, рабо
 1. **Репозиторий вместо прямого чтения JSON.** Модули получают данные через интерфейс:
    ```ts
    interface CatalogRepository {
-     getMasters(): Promise<Master[]>;
+     getMasters(group?: ServiceGroupId): Promise<Master[]>;   // с фильтром «мастер по задаче»
      getMaster(id: string): Promise<Master | undefined>;
+     getServiceGroups(): Promise<ServiceGroup[]>;             // отсортированы по order
      getServices(group?: ServiceGroupId): Promise<Service[]>;
+     getService(id: string): Promise<Service | undefined>;
+     getGalleryCategories(): Promise<GalleryCategory[]>;      // только непустые, по order
      getGallery(category: ServiceGroupId): Promise<GalleryItem[]>;
      getSchedule(): Promise<Schedule>;
      getBusiness(): Promise<Business>;
