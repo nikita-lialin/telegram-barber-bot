@@ -46,6 +46,8 @@ docker run -d --name barber-bot \
 
 Том `/app/sessions` хранит выбранный пользователями язык, чтобы он не терялся при обновлении образа. Файл `.env` в образ не попадает, переменные задаются окружением.
 
+Для запуска с файлом: `docker run --rm --env-file .env -v barber-sessions:/app/sessions barber-bot`. Docker не вырезает комментарии после значения (`KEY=value # текст`), поэтому в `.env` комментарии пишите только на отдельных строках. Из `.env` уберите `SESSION_DIR`, чтобы действовало значение из образа.
+
 ## Данные салона
 
 Весь контент лежит в `data/*.json`: `services.json` (услуги и цены), `masters.json`, `schedule.json` (график и часовой пояс), `business.json` (адрес, контакты), `gallery.json`. Фото лежат в `assets/`.
