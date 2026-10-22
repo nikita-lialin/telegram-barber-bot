@@ -1,0 +1,38 @@
+{
+  "timezone": "Europe/Moscow",
+  "weekly": {
+    "mon": {
+      "open": "10:00",
+      "close": "20:00"
+    },
+    "tue": {
+      "open": "10:00",
+      "close": "20:00"
+    },
+    "wed": {
+      "open": "10:00",
+      "close": "20:00"
+    },
+    "thu": {
+      "open": "10:00",
+      "close": "20:00"
+    },
+    "fri": {
+      "open": "10:00",
+      "close": "20:00"
+    },
+    "sat": {
+      "open": "10:00",
+      "close": "18:00"
+    },
+    "sun": {
+      "open": "11:00",
+      "close": "16:00"
+    }
+  },
+  "exceptions": [],
+  "specialDaysNote": {
+    "ru": "Перед праздниками и по договорённости возможны доп. часы",
+    "en": "Extra hours may be available before holidays and by arrangement"
+  }
+}

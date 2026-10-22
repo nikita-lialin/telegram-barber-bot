@@ -1,0 +1,7 @@
+dist
+coverage
+node_modules
+sessions
+package-lock.json
+docs
+README.md

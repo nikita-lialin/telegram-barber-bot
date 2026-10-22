@@ -1,0 +1,159 @@
+{
+  "groups": [
+    {
+      "id": "men",
+      "emoji": "💇‍♂️",
+      "order": 1,
+      "title": {
+        "ru": "Мужские",
+        "en": "Men"
+      }
+    },
+    {
+      "id": "women",
+      "emoji": "💇‍♀️",
+      "order": 2,
+      "title": {
+        "ru": "Женские",
+        "en": "Women"
+      }
+    },
+    {
+      "id": "kids",
+      "emoji": "🧒",
+      "order": 3,
+      "title": {
+        "ru": "Детские (до 12 лет)",
+        "en": "Kids (under 12)"
+      }
+    },
+    {
+      "id": "coloring",
+      "emoji": "🎨",
+      "order": 4,
+      "title": {
+        "ru": "Окрашивание",
+        "en": "Coloring"
+      }
+    }
+  ],
+  "services": [
+    {
+      "id": "men-haircut",
+      "group": "men",
+      "title": {
+        "ru": "Стрижка",
+        "en": "Haircut"
+      },
+      "price": {
+        "kind": "fixed",
+        "amount": 1500
+      },
+      "durationMin": {
+        "min": 45
+      },
+      "masterIds": ["alexey"]
+    },
+    {
+      "id": "men-beard",
+      "group": "men",
+      "title": {
+        "ru": "Борода",
+        "en": "Beard"
+      },
+      "price": {
+        "kind": "fixed",
+        "amount": 800
+      },
+      "durationMin": {
+        "min": 30
+      },
+      "masterIds": ["alexey"]
+    },
+    {
+      "id": "men-combo",
+      "group": "men",
+      "title": {
+        "ru": "Стрижка и борода",
+        "en": "Haircut and beard"
+      },
+      "price": {
+        "kind": "fixed",
+        "amount": 2100
+      },
+      "durationMin": {
+        "min": 70
+      },
+      "masterIds": ["alexey"]
+    },
+    {
+      "id": "women-haircut",
+      "group": "women",
+      "title": {
+        "ru": "Стрижка",
+        "en": "Haircut"
+      },
+      "price": {
+        "kind": "fixed",
+        "amount": 2500
+      },
+      "durationMin": {
+        "min": 60
+      },
+      "masterIds": ["marina"]
+    },
+    {
+      "id": "women-styling",
+      "group": "women",
+      "title": {
+        "ru": "Укладка",
+        "en": "Styling"
+      },
+      "price": {
+        "kind": "fixed",
+        "amount": 1800
+      },
+      "durationMin": {
+        "min": 45
+      },
+      "masterIds": ["marina"]
+    },
+    {
+      "id": "kids-haircut",
+      "group": "kids",
+      "title": {
+        "ru": "Стрижка",
+        "en": "Haircut"
+      },
+      "price": {
+        "kind": "fixed",
+        "amount": 1000
+      },
+      "durationMin": {
+        "min": 30
+      },
+      "masterIds": ["denis"]
+    },
+    {
+      "id": "coloring-full",
+      "group": "coloring",
+      "title": {
+        "ru": "Окрашивание",
+        "en": "Coloring"
+      },
+      "price": {
+        "kind": "from",
+        "amount": 4500
+      },
+      "durationMin": {
+        "min": 120,
+        "max": 240
+      },
+      "note": {
+        "ru": "Итог зависит от длины и сложности",
+        "en": "Final price depends on length and complexity"
+      },
+      "masterIds": ["olga"]
+    }
+  ]
+}
