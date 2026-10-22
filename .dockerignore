@@ -1,0 +1,16 @@
+.git
+.github
+node_modules
+dist
+coverage
+sessions
+docs
+tests
+scripts
+.env
+.env.*
+!.env.example
+*.log
+Dockerfile
+.dockerignore
+README.md
