@@ -4,6 +4,8 @@ import type { UserFromGetMe } from 'grammy/types';
 import type { Logger } from 'pino';
 import type { BotContext, SessionData } from './context.js';
 import type { CatalogRepository } from './data/repository.js';
+import { createBookingFeature } from './features/booking/index.js';
+import { ExternalLinksBookingProvider } from './features/booking/provider.js';
 import { fallbackFeature } from './features/fallback/index.js';
 import { helpFeature } from './features/help/index.js';
 import { languageFeature } from './features/language/index.js';
@@ -56,6 +58,7 @@ export function createBot(deps: BotDeps): Bot<BotContext> {
   bot.use(menuFeature);
   bot.use(createServicesFeature(deps.catalog));
   bot.use(createMastersFeature(deps.catalog));
+  bot.use(createBookingFeature(deps.catalog, new ExternalLinksBookingProvider(deps.catalog)));
   bot.use(languageFeature);
   bot.use(helpFeature);
   bot.use(stubsFeature);

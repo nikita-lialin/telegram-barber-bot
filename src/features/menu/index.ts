@@ -35,6 +35,11 @@ const IMPLEMENTED_KINDS: ReadonlySet<Route['kind']> = new Set([
   'mastersFilter',
   'masterCard',
   'masterCall',
+  'booking',
+  'bookingService',
+  'bookingMaster',
+  'bookingNoReply',
+  'bookingCall',
 ]);
 
 stubsFeature.on('callback_query:data', async (ctx, next) => {

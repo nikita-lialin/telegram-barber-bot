@@ -176,6 +176,13 @@ describe('проверки загрузчика при старте', () => {
     expect(text).toContain('повторяется id мастера');
   });
 
+  it('не даёт мастеру занять id «any», зарезервированный под «Любой мастер»', () => {
+    const root = copyProject();
+    edit(root, 'masters.json', (j) => (j.masters[0].id = 'any'));
+    edit(root, 'services.json', (j) => (j.services[0].masterIds = ['any']));
+    expect(problemsOf(root).join('\n')).toContain('зарезервирован');
+  });
+
   it('ловит отсутствующий и неверный файл фото', () => {
     const root = copyProject();
     edit(root, 'masters.json', (j) => {

@@ -23,6 +23,7 @@ export type Route =
   | { kind: 'bookingService'; serviceId: string }
   | { kind: 'bookingMaster'; masterId: string; serviceId?: string }
   | { kind: 'bookingNoReply'; masterId: string }
+  | { kind: 'bookingCall' }
   | { kind: 'language'; locale: Locale }
   | { kind: 'noop' };
 
@@ -68,6 +69,8 @@ function encodeParts(route: Route): string {
         : `b:m:${route.masterId}:${route.serviceId}`;
     case 'bookingNoReply':
       return `b:nr:${route.masterId}`;
+    case 'bookingCall':
+      return 'b:call';
     case 'language':
       return `l:${route.locale}`;
     case 'noop':
@@ -120,6 +123,7 @@ export function decode(data: string): Route | undefined {
       if (count === 4 && a === 'm' && isId(b) && isId(c)) {
         return { kind: 'bookingMaster', masterId: b, serviceId: c };
       }
+      if (count === 2 && a === 'call') return { kind: 'bookingCall' };
       if (count === 3 && a === 'nr' && isId(b)) return { kind: 'bookingNoReply', masterId: b };
       return undefined;
     case 'l':
