@@ -6,6 +6,7 @@ import { EnvError, loadEnv } from './config/env.js';
 import { CatalogError, loadCatalog } from './data/loader.js';
 import { JsonCatalogRepository } from './data/repository.js';
 import { PROJECT_ROOT } from './paths.js';
+import { registerShutdown } from './shutdown.js';
 import { join } from 'node:path';
 
 async function main(): Promise<void> {
@@ -26,12 +27,7 @@ async function main(): Promise<void> {
   await bot.init();
   await registerCommands(bot.api, localesDir);
 
-  const shutdown = (signal: string) => {
-    logger.info({ signal }, 'stopping');
-    void bot.stop();
-  };
-  process.once('SIGINT', () => shutdown('SIGINT'));
-  process.once('SIGTERM', () => shutdown('SIGTERM'));
+  registerShutdown(bot, logger);
 
   // Long polling; промис завершается после bot.stop().
   await bot.start({ onStart: (me) => logger.info({ username: me.username }, 'bot started') });
