@@ -1,0 +1,20 @@
+# Один экземпляр бота: Telegram отдаёт long polling одному получателю (второй получит 409).
+# Поэтому здесь нет replicas/scale, и нельзя запускать второй compose-проект с тем же токеном.
+services:
+  bot:
+    build: .
+    image: barber-bot
+    # Токен и остальные настройки лежат только в .env на сервере, в репозиторий он не попадает.
+    env_file: .env
+    environment:
+      # Значения контейнера важнее .env: пути и режим не зависят от того, что написано в файле.
+      NODE_ENV: production
+      SESSION_DIR: /app/sessions
+    volumes:
+      - sessions:/app/sessions
+    restart: unless-stopped
+    # Бот по SIGTERM вызывает bot.stop() и выходит за секунды; запас на случай медленной сети.
+    stop_grace_period: 15s
+
+volumes:
+  sessions:
