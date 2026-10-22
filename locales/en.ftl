@@ -58,3 +58,23 @@ masters-card-specialization = ✂️ { $specialization }
 masters-card-hours = 🕒 Contact hours: { $hours }
 masters-card-phone = 📞 { $phone }
 masters-no-phone = This master has no phone number
+
+booking-choose = ✂️ Book a visit
+    Choose a master or “Any master”:
+booking-choose-service = ✂️ Booking: { $service }
+    Choose a master:
+booking-any-master = 🎲 Any master
+booking-channels-master = ✂️ Booking with: { $master }
+booking-channels-salon = ✂️ Booking with the salon
+booking-channels-service = 💈 Service: { $service }
+booking-channels-message = ✉️ Ready-made message. If it was not filled in automatically, copy it:
+    { $message }
+booking-no-reply-button = 😕 Master not replying?
+booking-no-reply-title = 😕 If { $master } does not reply
+booking-no-reply-hint = A reply may take a while: outside contact hours the master may be unavailable. Try another channel or write to the salon.
+booking-no-reply-salon = 🏠 Salon contact: { $name }
+booking-salon-whatsapp = 🏠 Salon WhatsApp
+booking-salon-telegram = 🏠 Salon Telegram
+booking-salon-instagram = 🏠 Salon Instagram
+booking-salon-call = 🏠 Call the salon
+booking-no-phone = The salon has no phone number

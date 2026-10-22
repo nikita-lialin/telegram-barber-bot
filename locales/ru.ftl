@@ -58,3 +58,23 @@ masters-card-specialization = ✂️ { $specialization }
 masters-card-hours = 🕒 Связь: { $hours }
 masters-card-phone = 📞 { $phone }
 masters-no-phone = У мастера не указан телефон
+
+booking-choose = ✂️ Записаться
+    Выберите мастера или «Любой мастер»:
+booking-choose-service = ✂️ Запись на услугу «{ $service }»
+    Выберите мастера:
+booking-any-master = 🎲 Любой мастер
+booking-channels-master = ✂️ Запись к мастеру: { $master }
+booking-channels-salon = ✂️ Запись в салон
+booking-channels-service = 💈 Услуга: { $service }
+booking-channels-message = ✉️ Готовый текст сообщения. Если он не подставился сам, скопируйте его:
+    { $message }
+booking-no-reply-button = 😕 Мастер не отвечает?
+booking-no-reply-title = 😕 Если { $master } не отвечает
+booking-no-reply-hint = Ответ может прийти позже: вне времени связи мастер может быть недоступен. Попробуйте другой канал или напишите в салон.
+booking-no-reply-salon = 🏠 Общий контакт: { $name }
+booking-salon-whatsapp = 🏠 WhatsApp салона
+booking-salon-telegram = 🏠 Telegram салона
+booking-salon-instagram = 🏠 Instagram салона
+booking-salon-call = 🏠 Позвонить в салон
+booking-no-phone = У салона не указан телефон

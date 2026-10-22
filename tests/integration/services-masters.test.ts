@@ -199,9 +199,9 @@ describe('сценарий 4: мастер по задаче', () => {
 });
 
 describe('остальные разделы и устаревшие кнопки', () => {
-  it('запись и галерея пока отвечают заглушкой', async () => {
+  it('галерея, график и адрес пока отвечают заглушкой', async () => {
     const t = createTestBot();
-    for (const data of ['b:m:olga', 'b:s:coloring-full', 'b', 'g']) {
+    for (const data of ['g', 'g:p:men:0', 'sch', 'loc']) {
       t.calls.length = 0;
       await t.sendCallback(data, 'ru');
       const answer = t.calls.find((c) => c.method === 'answerCallbackQuery');

@@ -16,6 +16,7 @@ const ROUTES: Array<[Route, string]> = [
   [{ kind: 'booking' }, 'b'],
   [{ kind: 'bookingService', serviceId: 'coloring-full' }, 'b:s:coloring-full'],
   [{ kind: 'bookingMaster', masterId: 'any' }, 'b:m:any'],
+  [{ kind: 'bookingCall' }, 'b:call'],
   [
     { kind: 'bookingMaster', masterId: 'olga', serviceId: 'coloring-full' },
     'b:m:olga:coloring-full',

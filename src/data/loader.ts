@@ -1,6 +1,7 @@
 import { readFileSync, statSync } from 'node:fs';
 import { isAbsolute, join, relative, resolve } from 'node:path';
 import type { ZodType } from 'zod';
+import { ANY_MASTER } from '../ui/callback.js';
 import type {
   Business,
   GalleryCategory,
@@ -118,6 +119,9 @@ export function loadCatalog(root: string): CatalogData {
 
   for (const id of findDuplicates(masters.map((m) => m.id))) {
     problems.push(`data/masters.json: повторяется id мастера «${id}»`);
+  }
+  if (masters.some((m) => m.id === ANY_MASTER)) {
+    problems.push(`data/masters.json: id «${ANY_MASTER}» зарезервирован для выбора «Любой мастер»`);
   }
   for (const id of findDuplicates(groups.map((g) => g.id))) {
     problems.push(`data/services.json: повторяется id группы «${id}»`);
