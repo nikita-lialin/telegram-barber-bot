@@ -7,6 +7,7 @@ import type { CatalogRepository } from './data/repository.js';
 import { createBookingFeature } from './features/booking/index.js';
 import { ExternalLinksBookingProvider } from './features/booking/provider.js';
 import { fallbackFeature } from './features/fallback/index.js';
+import { createGalleryFeature } from './features/gallery/index.js';
 import { helpFeature } from './features/help/index.js';
 import { languageFeature } from './features/language/index.js';
 import { createLocationFeature } from './features/location/index.js';
@@ -63,6 +64,7 @@ export function createBot(deps: BotDeps): Bot<BotContext> {
   bot.use(createServicesFeature(deps.catalog));
   bot.use(createMastersFeature(deps.catalog));
   bot.use(createBookingFeature(deps.catalog, new ExternalLinksBookingProvider(deps.catalog)));
+  bot.use(createGalleryFeature(deps.catalog));
   bot.use(createScheduleFeature(deps.catalog, deps.now));
   bot.use(createLocationFeature(deps.catalog));
   bot.use(languageFeature);

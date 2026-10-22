@@ -199,13 +199,13 @@ describe('сценарий 4: мастер по задаче', () => {
 });
 
 describe('остальные разделы и устаревшие кнопки', () => {
-  it('галерея пока отвечает заглушкой', async () => {
+  it('заглушек больше нет: все разделы отвечают настоящими экранами', async () => {
     const t = createTestBot();
-    for (const data of ['g', 'g:p:men:0']) {
+    for (const data of ['s', 'ms', 'g', 'g:p:men:0', 'sch', 'loc', 'b']) {
       t.calls.length = 0;
       await t.sendCallback(data, 'ru');
       const answer = t.calls.find((c) => c.method === 'answerCallbackQuery');
-      expect(answer?.payload['text'], data).toBe('Раздел скоро появится');
+      expect(answer?.payload['text'], data).toBeUndefined();
     }
   });
 

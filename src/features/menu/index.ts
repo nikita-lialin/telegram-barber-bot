@@ -40,6 +40,8 @@ const IMPLEMENTED_KINDS: ReadonlySet<Route['kind']> = new Set([
   'bookingMaster',
   'bookingNoReply',
   'bookingCall',
+  'gallery',
+  'galleryPhoto',
   'schedule',
   'location',
 ]);

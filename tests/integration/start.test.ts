@@ -65,11 +65,11 @@ describe('меню и язык', () => {
     expect(callbackData(t.calls[1]?.payload['reply_markup'])).toEqual(['m']);
   });
 
-  it('кнопки разделов пока отвечают заглушкой', async () => {
+  it('кнопки разделов не отвечают заглушкой', async () => {
     const t = createTestBot();
     await t.sendCallback('g', 'ru');
     const answer = t.calls.find((c) => c.method === 'answerCallbackQuery');
-    expect(answer?.payload['text']).toBe('Раздел скоро появится');
+    expect(answer?.payload['text']).toBeUndefined();
   });
 
   it('устаревшая кнопка возвращает в меню', async () => {
