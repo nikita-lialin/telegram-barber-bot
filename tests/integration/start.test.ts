@@ -67,7 +67,7 @@ describe('меню и язык', () => {
 
   it('кнопки разделов пока отвечают заглушкой', async () => {
     const t = createTestBot();
-    await t.sendCallback('s', 'ru');
+    await t.sendCallback('g', 'ru');
     const answer = t.calls.find((c) => c.method === 'answerCallbackQuery');
     expect(answer?.payload['text']).toBe('Раздел скоро появится');
   });

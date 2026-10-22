@@ -42,10 +42,14 @@ export function createTestBot() {
 
   bot.api.config.use((_prev, method, payload) => {
     calls.push({ method, payload: payload as Record<string, unknown> });
+    const message = { message_id: 100, date: 0, chat: { id: 1, type: 'private' } };
+    const photoMessage = { ...message, photo: [{ file_id: 'FILE-ID', width: 1, height: 1 }] };
     const result =
       method === 'sendMessage'
-        ? { message_id: 100, date: 0, chat: { id: 1, type: 'private' } }
-        : true;
+        ? message
+        : method === 'sendPhoto' || method === 'editMessageMedia'
+          ? photoMessage
+          : true;
     return Promise.resolve({ ok: true, result } as never);
   });
 
@@ -74,7 +78,8 @@ export function createTestBot() {
         },
       } as Update);
     },
-    async sendCallback(data: string, languageCode?: string) {
+    /** `fromPhoto` имитирует нажатие кнопки под сообщением с фото. */
+    async sendCallback(data: string, languageCode?: string, fromPhoto = false) {
       await bot.handleUpdate({
         update_id: ++updateCounter,
         callback_query: {
@@ -86,7 +91,7 @@ export function createTestBot() {
             message_id: 100,
             date: 0,
             chat: { id: 1, type: 'private' },
-            text: 'old',
+            ...(fromPhoto ? { photo: [{ file_id: 'OLD', width: 1, height: 1 }] } : { text: 'old' }),
           },
         },
       } as Update);

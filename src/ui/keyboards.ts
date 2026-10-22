@@ -19,3 +19,14 @@ export function backAndMenuKeyboard(ctx: BotContext, back: Route): InlineKeyboar
     .row()
     .add(routeButton(ctx.t('btn-main-menu'), { kind: 'menu' }));
 }
+
+/** Добавляет в конец готовой клавиатуры кнопки «Назад» и «Главное меню». */
+export function withNavigation(
+  keyboard: InlineKeyboard,
+  ctx: BotContext,
+  back: Route,
+): InlineKeyboard {
+  return keyboard
+    .row(routeButton(ctx.t('btn-back'), back))
+    .row(routeButton(ctx.t('btn-main-menu'), { kind: 'menu' }));
+}

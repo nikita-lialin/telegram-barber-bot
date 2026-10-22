@@ -7,7 +7,9 @@ import type { CatalogRepository } from './data/repository.js';
 import { fallbackFeature } from './features/fallback/index.js';
 import { helpFeature } from './features/help/index.js';
 import { languageFeature } from './features/language/index.js';
+import { createMastersFeature } from './features/masters/index.js';
 import { menuFeature, stubsFeature } from './features/menu/index.js';
+import { createServicesFeature } from './features/services/index.js';
 import { createStartFeature } from './features/start/index.js';
 import { createI18n, detectLocale } from './i18n/index.js';
 import { createErrorHandler } from './middleware/error-handler.js';
@@ -52,6 +54,8 @@ export function createBot(deps: BotDeps): Bot<BotContext> {
 
   bot.use(createStartFeature(deps.catalog));
   bot.use(menuFeature);
+  bot.use(createServicesFeature(deps.catalog));
+  bot.use(createMastersFeature(deps.catalog));
   bot.use(languageFeature);
   bot.use(helpFeature);
   bot.use(stubsFeature);
