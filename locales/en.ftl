@@ -104,3 +104,12 @@ location-address = 🏠 { $address }
 location-entrance = 🚪 How to find the entrance: { $hint }
 location-map-yandex = 🗺 Yandex Maps
 location-map-google = 🗺 Google Maps
+
+gallery-title = 📸 Our work
+    Choose a category:
+gallery-empty = No photos yet.
+gallery-photo = 📸 { $category }
+    { $caption }
+gallery-prev = ◀
+gallery-next = ▶
+gallery-counter = { $current } / { $total }

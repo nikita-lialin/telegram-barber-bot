@@ -104,3 +104,12 @@ location-address = 🏠 { $address }
 location-entrance = 🚪 Как найти вход: { $hint }
 location-map-yandex = 🗺 Яндекс Карты
 location-map-google = 🗺 Google Maps
+
+gallery-title = 📸 Наши работы
+    Выберите категорию:
+gallery-empty = Фото работ пока нет.
+gallery-photo = 📸 { $category }
+    { $caption }
+gallery-prev = ◀
+gallery-next = ▶
+gallery-counter = { $current } / { $total }
