@@ -119,8 +119,8 @@
       "category": "coloring",
       "file": "gallery/coloring/coloring-1.png",
       "caption": {
-        "ru": "Тонирование в тёплый оттенок",
-        "en": "Warm toning"
+        "ru": "Яркое синее окрашивание",
+        "en": "Vibrant blue hair coloring"
       },
       "masterId": "olga"
     },
@@ -129,8 +129,28 @@
       "category": "coloring",
       "file": "gallery/coloring/coloring-2.png",
       "caption": {
-        "ru": "Окрашивание с мягким переходом",
-        "en": "Soft gradient coloring"
+        "ru": "Изумрудно-зеленое окрашивание",
+        "en": "Emerald green hair coloring"
+      },
+      "masterId": "olga"
+    },
+    {
+      "id": "coloring-3",
+      "category": "coloring",
+      "file": "gallery/coloring/coloring-3.png",
+      "caption": {
+        "ru": "Нежно-розовое окрашивание",
+        "en": "Pastel pink hair coloring"
+      },
+      "masterId": "olga"
+    },
+    {
+      "id": "coloring-4",
+      "category": "coloring",
+      "file": "gallery/coloring/coloring-4.png",
+      "caption": {
+        "ru": "Креативное сиреневое и многоцветное окрашивание",
+        "en": "Creative purple and multicolor hair coloring"
       },
       "masterId": "olga"
     }
