@@ -24,6 +24,7 @@ stub-coming-soon = This section is coming soon
 
 errors-generic = Something went wrong. Here is the main menu.
 errors-stale-button = This button is out of date
+errors-unknown-input = I only understand the menu buttons.
 
 btn-book = ✂️ Book a visit
 btn-ask-master = 💬 Ask the master
