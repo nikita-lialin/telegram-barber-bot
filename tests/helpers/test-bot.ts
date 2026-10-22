@@ -28,7 +28,9 @@ const botInfo = {
 let updateCounter = 0;
 
 /** Бот на реальных data/*.json; запросы к Telegram перехватываются, сеть не нужна. */
-export function createTestBot() {
+/** `now` фиксирует время для раздела «График работы»; без него берутся реальные часы. */
+export function createTestBot(options: { now?: Date } = {}) {
+  const fixedNow = options.now;
   const calls: ApiCall[] = [];
   const sessions = new MemorySessionStorage<SessionData>();
   const bot = createBot({
@@ -38,6 +40,7 @@ export function createTestBot() {
     localesDir: join(PROJECT_ROOT, 'locales'),
     sessionStorage: sessions,
     botInfo,
+    ...(fixedNow === undefined ? {} : { now: () => fixedNow }),
   });
 
   bot.api.config.use((_prev, method, payload) => {

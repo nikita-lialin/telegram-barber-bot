@@ -9,8 +9,10 @@ import { ExternalLinksBookingProvider } from './features/booking/provider.js';
 import { fallbackFeature } from './features/fallback/index.js';
 import { helpFeature } from './features/help/index.js';
 import { languageFeature } from './features/language/index.js';
+import { createLocationFeature } from './features/location/index.js';
 import { createMastersFeature } from './features/masters/index.js';
 import { menuFeature, stubsFeature } from './features/menu/index.js';
+import { createScheduleFeature } from './features/schedule/index.js';
 import { createServicesFeature } from './features/services/index.js';
 import { createStartFeature } from './features/start/index.js';
 import { createI18n, detectLocale } from './i18n/index.js';
@@ -28,6 +30,8 @@ export interface BotDeps {
   sessionStorage: StorageAdapter<SessionData>;
   /** Данные бота: если заданы, getMe при старте не вызывается (нужно в тестах без сети). */
   botInfo?: UserFromGetMe;
+  /** Источник текущего времени для «открыто сейчас»; в тестах фиксируется. */
+  now?: () => Date;
 }
 
 export function createFileSessionStorage(dir: string): StorageAdapter<SessionData> {
@@ -59,6 +63,8 @@ export function createBot(deps: BotDeps): Bot<BotContext> {
   bot.use(createServicesFeature(deps.catalog));
   bot.use(createMastersFeature(deps.catalog));
   bot.use(createBookingFeature(deps.catalog, new ExternalLinksBookingProvider(deps.catalog)));
+  bot.use(createScheduleFeature(deps.catalog, deps.now));
+  bot.use(createLocationFeature(deps.catalog));
   bot.use(languageFeature);
   bot.use(helpFeature);
   bot.use(stubsFeature);
