@@ -1,7 +1,7 @@
 import { Composer } from 'grammy';
 import type { BotContext } from '../../context.js';
 import { currentLocale } from '../../i18n/index.js';
-import { decode } from '../../ui/callback.js';
+import { decode, type Route } from '../../ui/callback.js';
 import { renderScreen } from '../../ui/render.js';
 import { mainMenuScreen } from './view.js';
 
@@ -27,7 +27,18 @@ menuFeature.callbackQuery('noop', async (ctx) => {
  */
 export const stubsFeature = new Composer<BotContext>();
 
+/** Разделы с настоящими обработчиками: заглушка их не перехватывает, устаревшие id уходят в fallback. */
+const IMPLEMENTED_KINDS: ReadonlySet<Route['kind']> = new Set([
+  'services',
+  'servicesGroup',
+  'masters',
+  'mastersFilter',
+  'masterCard',
+  'masterCall',
+]);
+
 stubsFeature.on('callback_query:data', async (ctx, next) => {
-  if (decode(ctx.callbackQuery.data) === undefined) return next();
+  const route = decode(ctx.callbackQuery.data);
+  if (route === undefined || IMPLEMENTED_KINDS.has(route.kind)) return next();
   await ctx.answerCallbackQuery({ text: ctx.t('stub-coming-soon') });
 });
