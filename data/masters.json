@@ -1,0 +1,92 @@
+{
+  "masters": [
+    {
+      "id": "alexey",
+      "name": {
+        "ru": "Алексей",
+        "en": "Alexey"
+      },
+      "photo": "masters/alexey.png",
+      "specialization": {
+        "ru": "Мужские стрижки и борода",
+        "en": "Men’s haircuts and beards"
+      },
+      "contacts": {
+        "whatsapp": "79990000001",
+        "phone": "+7 999 000-00-01",
+        "telegram": "barber_alexey_demo",
+        "instagram": "alexey.barber.demo"
+      },
+      "contactHours": {
+        "ru": "Пн–Пт 10:00–19:00",
+        "en": "Mon–Fri 10:00–19:00"
+      }
+    },
+    {
+      "id": "marina",
+      "name": {
+        "ru": "Марина",
+        "en": "Marina"
+      },
+      "photo": "masters/marina.png",
+      "specialization": {
+        "ru": "Женские стрижки и укладки",
+        "en": "Women’s haircuts and styling"
+      },
+      "contacts": {
+        "whatsapp": "79990000002",
+        "phone": "+7 999 000-00-02",
+        "telegram": "barber_marina_demo",
+        "instagram": "marina.hair.demo"
+      },
+      "contactHours": {
+        "ru": "Пн–Сб 10:00–19:00",
+        "en": "Mon–Sat 10:00–19:00"
+      }
+    },
+    {
+      "id": "olga",
+      "name": {
+        "ru": "Ольга",
+        "en": "Olga"
+      },
+      "photo": "masters/olga.png",
+      "specialization": {
+        "ru": "Окрашивание и уход",
+        "en": "Coloring and hair care"
+      },
+      "contacts": {
+        "whatsapp": "79990000003",
+        "phone": "+7 999 000-00-03",
+        "telegram": "barber_olga_demo",
+        "instagram": "olga.color.demo"
+      },
+      "contactHours": {
+        "ru": "Вт–Сб 11:00–19:00",
+        "en": "Tue–Sat 11:00–19:00"
+      }
+    },
+    {
+      "id": "denis",
+      "name": {
+        "ru": "Денис",
+        "en": "Denis"
+      },
+      "photo": "masters/denis.png",
+      "specialization": {
+        "ru": "Детские и семейные стрижки",
+        "en": "Kids’ and family haircuts"
+      },
+      "contacts": {
+        "whatsapp": "79990000004",
+        "phone": "+7 999 000-00-04",
+        "telegram": "barber_denis_demo",
+        "instagram": "denis.barber.demo"
+      },
+      "contactHours": {
+        "ru": "Пн–Пт 10:00–19:00",
+        "en": "Mon–Fri 10:00–19:00"
+      }
+    }
+  ]
+}

@@ -1,0 +1,158 @@
+{
+  "categories": [
+    {
+      "id": "men",
+      "order": 1,
+      "title": {
+        "ru": "Мужские",
+        "en": "Men"
+      }
+    },
+    {
+      "id": "women",
+      "order": 2,
+      "title": {
+        "ru": "Женские",
+        "en": "Women"
+      }
+    },
+    {
+      "id": "kids",
+      "order": 3,
+      "title": {
+        "ru": "Детские",
+        "en": "Kids"
+      }
+    },
+    {
+      "id": "coloring",
+      "order": 4,
+      "title": {
+        "ru": "Окрашивание",
+        "en": "Coloring"
+      }
+    }
+  ],
+  "items": [
+    {
+      "id": "men-1",
+      "category": "men",
+      "file": "gallery/men/men-1.png",
+      "caption": {
+        "ru": "Классическая мужская стрижка",
+        "en": "Classic men’s haircut"
+      },
+      "masterId": "alexey"
+    },
+    {
+      "id": "men-2",
+      "category": "men",
+      "file": "gallery/men/men-2.png",
+      "caption": {
+        "ru": "Фейд и оформление бороды",
+        "en": "Fade and beard shaping"
+      },
+      "masterId": "alexey"
+    },
+    {
+      "id": "men-3",
+      "category": "men",
+      "file": "gallery/men/men-3.png",
+      "caption": {
+        "ru": "Стрижка машинкой с переходом",
+        "en": "Clipper cut with a blend"
+      },
+      "masterId": "alexey"
+    },
+    {
+      "id": "women-1",
+      "category": "women",
+      "file": "gallery/women/women-1.png",
+      "caption": {
+        "ru": "Каре с лёгкой укладкой",
+        "en": "Bob with a light styling"
+      },
+      "masterId": "marina"
+    },
+    {
+      "id": "women-2",
+      "category": "women",
+      "file": "gallery/women/women-2.png",
+      "caption": {
+        "ru": "Вечерняя укладка",
+        "en": "Evening styling"
+      },
+      "masterId": "marina"
+    },
+    {
+      "id": "women-3",
+      "category": "women",
+      "file": "gallery/women/women-3.png",
+      "caption": {
+        "ru": "Длинные волосы, обновление формы",
+        "en": "Long hair, shape refresh"
+      },
+      "masterId": "marina"
+    },
+    {
+      "id": "kids-1",
+      "category": "kids",
+      "file": "gallery/kids/kids-1.png",
+      "caption": {
+        "ru": "Детская стрижка",
+        "en": "Kids’ haircut"
+      },
+      "masterId": "denis"
+    },
+    {
+      "id": "kids-2",
+      "category": "kids",
+      "file": "gallery/kids/kids-2.png",
+      "caption": {
+        "ru": "Семейный визит: папа и сын",
+        "en": "Family visit: dad and son"
+      },
+      "masterId": "denis"
+    },
+    {
+      "id": "coloring-1",
+      "category": "coloring",
+      "file": "gallery/coloring/coloring-1.png",
+      "caption": {
+        "ru": "Яркое синее окрашивание",
+        "en": "Vibrant blue hair coloring"
+      },
+      "masterId": "olga"
+    },
+    {
+      "id": "coloring-2",
+      "category": "coloring",
+      "file": "gallery/coloring/coloring-2.png",
+      "caption": {
+        "ru": "Изумрудно-зеленое окрашивание",
+        "en": "Emerald green hair coloring"
+      },
+      "masterId": "olga"
+    },
+    {
+      "id": "coloring-3",
+      "category": "coloring",
+      "file": "gallery/coloring/coloring-3.png",
+      "caption": {
+        "ru": "Нежно-розовое окрашивание",
+        "en": "Pastel pink hair coloring"
+      },
+      "masterId": "olga"
+    },
+    {
+      "id": "coloring-4",
+      "category": "coloring",
+      "file": "gallery/coloring/coloring-4.png",
+      "caption": {
+        "ru": "Креативное сиреневое и многоцветное окрашивание",
+        "en": "Creative purple and multicolor hair coloring"
+      },
+      "masterId": "olga"
+    }
+  ]
+}

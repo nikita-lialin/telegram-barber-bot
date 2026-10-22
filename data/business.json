@@ -1,0 +1,26 @@
+{
+  "name": {
+    "ru": "Барбершоп «Демо»",
+    "en": "Demo Barbershop"
+  },
+  "address": {
+    "ru": "Москва, ул. Примерная, д. 1",
+    "en": "1 Primernaya St, Moscow"
+  },
+  "mapLinks": {
+    "yandex": "https://yandex.ru/maps/?text=Moscow%2C%20Primernaya%201",
+    "google": "https://www.google.com/maps/search/?api=1&query=Moscow%2C%20Primernaya%201"
+  },
+  "entranceHint": {
+    "ru": "Вход со двора, синяя дверь рядом с аптекой, второй этаж",
+    "en": "Entrance from the courtyard, blue door next to the pharmacy, second floor"
+  },
+  "entrancePhoto": "location/entrance.png",
+  "contacts": {
+    "whatsapp": "79990000000",
+    "phone": "+7 999 000-00-00",
+    "telegram": "barber_demo_salon",
+    "instagram": "barber.demo"
+  },
+  "currency": "RUB"
+}
