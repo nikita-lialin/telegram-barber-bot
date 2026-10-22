@@ -28,9 +28,9 @@ const botInfo = {
 let updateCounter = 0;
 
 /** Бот на реальных data/*.json; запросы к Telegram перехватываются, сеть не нужна. */
-/** `now` фиксирует время для раздела «График работы»; без него берутся реальные часы. */
+/** `now` фиксирует время для разделов с часами и для антиспама; `setNow` двигает его в тесте. Без `now` берутся реальные часы. */
 export function createTestBot(options: { now?: Date } = {}) {
-  const fixedNow = options.now;
+  let currentNow = options.now;
   const calls: ApiCall[] = [];
   const sessions = new MemorySessionStorage<SessionData>();
   const bot = createBot({
@@ -40,7 +40,7 @@ export function createTestBot(options: { now?: Date } = {}) {
     localesDir: join(PROJECT_ROOT, 'locales'),
     sessionStorage: sessions,
     botInfo,
-    ...(fixedNow === undefined ? {} : { now: () => fixedNow }),
+    now: () => currentNow ?? new Date(),
   });
 
   bot.api.config.use((_prev, method, payload) => {
@@ -56,8 +56,8 @@ export function createTestBot(options: { now?: Date } = {}) {
     return Promise.resolve({ ok: true, result } as never);
   });
 
-  const from = (languageCode: string | undefined) => ({
-    id: 1,
+  const from = (languageCode: string | undefined, userId = 1) => ({
+    id: userId,
     is_bot: false,
     first_name: 'Tester',
     ...(languageCode ? { language_code: languageCode } : {}),
@@ -67,6 +67,23 @@ export function createTestBot(options: { now?: Date } = {}) {
     bot,
     calls,
     sessions,
+    setNow(date: Date) {
+      currentNow = date;
+    },
+    /** Не-командное сообщение: `content` задаёт тип (текст, стикер, фото и т.д.). */
+    async sendMessage(content: MessageContent, options: SendOptions = {}) {
+      const userId = options.userId ?? 1;
+      await bot.handleUpdate({
+        update_id: ++updateCounter,
+        message: {
+          message_id: updateCounter,
+          date: 0,
+          chat: { id: userId, type: options.chatType ?? 'private' },
+          from: from(options.languageCode, userId),
+          ...content,
+        },
+      } as Update);
+    },
     async sendCommand(command: string, languageCode?: string, chatType = 'private') {
       const text = `/${command}`;
       await bot.handleUpdate({
@@ -101,6 +118,27 @@ export function createTestBot(options: { now?: Date } = {}) {
     },
   };
 }
+
+export type MessageContent = Record<string, unknown>;
+
+export interface SendOptions {
+  userId?: number;
+  languageCode?: string;
+  chatType?: string;
+}
+
+/** Готовые тела не-командных сообщений для `sendMessage`. */
+export const messages = {
+  text: (text: string): MessageContent => ({ text }),
+  sticker: (): MessageContent => ({
+    sticker: { file_id: 'S', file_unique_id: 'S', type: 'regular', width: 1, height: 1 },
+  }),
+  photo: (): MessageContent => ({
+    photo: [{ file_id: 'P', file_unique_id: 'P', width: 1, height: 1 }],
+  }),
+  voice: (): MessageContent => ({ voice: { file_id: 'V', file_unique_id: 'V', duration: 1 } }),
+  document: (): MessageContent => ({ document: { file_id: 'D', file_unique_id: 'D' } }),
+};
 
 export function callbackData(markup: unknown): string[] {
   const keyboard = markup as InlineKeyboardMarkup;

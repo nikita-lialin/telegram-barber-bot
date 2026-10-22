@@ -6,7 +6,7 @@ import type { BotContext, SessionData } from './context.js';
 import type { CatalogRepository } from './data/repository.js';
 import { createBookingFeature } from './features/booking/index.js';
 import { ExternalLinksBookingProvider } from './features/booking/provider.js';
-import { fallbackFeature } from './features/fallback/index.js';
+import { createFallbackFeature } from './features/fallback/index.js';
 import { createGalleryFeature } from './features/gallery/index.js';
 import { helpFeature } from './features/help/index.js';
 import { languageFeature } from './features/language/index.js';
@@ -70,7 +70,7 @@ export function createBot(deps: BotDeps): Bot<BotContext> {
   bot.use(languageFeature);
   bot.use(helpFeature);
   bot.use(stubsFeature);
-  bot.use(fallbackFeature);
+  bot.use(createFallbackFeature(deps.now));
 
   bot.catch(createErrorHandler(deps.logger));
   return bot;

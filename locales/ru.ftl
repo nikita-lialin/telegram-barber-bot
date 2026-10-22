@@ -24,6 +24,7 @@ stub-coming-soon = Раздел скоро появится
 
 errors-generic = Что-то пошло не так. Вот главное меню.
 errors-stale-button = Кнопка устарела
+errors-unknown-input = Я понимаю только кнопки меню.
 
 btn-book = ✂️ Записаться
 btn-ask-master = 💬 Спросить мастера
